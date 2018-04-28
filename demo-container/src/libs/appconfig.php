@@ -25,7 +25,7 @@ class AppConfig {
 	}
 
 	function filter_filename($name) {
-		if($name == "." || $name == "..") {
+		if($name == "." || preg_match("/^\.\..*/i", $name)) {
 			return false;
 		}
 		return true;
