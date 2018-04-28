@@ -1,4 +1,7 @@
 # kubernetes-practice
+基于iTop kubernetes及cmdbApi kubernetes task
+1. https://github.com/annProg/itop-extensions/tree/master/kubernetes
+2. https://github.com/annProg/cmdbApi/tree/master/actions
 
 ## kubernetes工作流
 使用iTop作为用户前端，开发人员提供镜像地址，iTop负责像kube-apiserver提交变更。iTop提供给用户3中类型的表单：Deployment，Ingress，Secret，具体策略如下：

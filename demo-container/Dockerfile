@@ -21,7 +21,7 @@ RUN	apk update && \
 
 COPY conf/default.conf /etc/nginx/conf.d/
 COPY conf/supervisord.conf /etc/supervisord.conf
-COPY src /home/wwwroot/default
 COPY init.sh /
+COPY src /home/wwwroot/default
 
 CMD ["sh", "/init.sh"]
