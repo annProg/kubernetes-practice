@@ -9,4 +9,4 @@
 
 ### 代码规范
 1. 代码仓库中不应包含数据库密码等敏感信息，应使用Secret存储配置信息
-2. Secret统一挂载至`/run/secret/appconfig`目录，需要修改代码从此目录读取配置
+2. Secret统一挂载至`/run/secrets/appconfig`目录，需要修改代码从此目录读取配置
