@@ -13,7 +13,8 @@ RUN	apk add --no-cache tzdata && \
 	cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && \
 	echo "${TIMEZONE}" > /etc/timezone
 RUN	apk add --no-cache supervisor nginx php7 php7-fpm php7-common php7-gd \
-	php7-json php7-curl php7-mbstring php7-iconv php7-opcache && \
+	php7-json php7-curl php7-mbstring php7-iconv php7-opcache \
+	php7-mysqli php7-mysqlnd php7-pdo_mysql && \
 	sed -i -e "s/;daemonize\s*=\s*yes/daemonize = no/g" /etc/php7/php-fpm.conf && \
 	sed -i "s|;date.timezone =.*|date.timezone = ${TIMEZONE}|" /etc/php7/php.ini
 
@@ -21,5 +22,8 @@ COPY conf/default.conf /etc/nginx/conf.d/
 COPY conf/nginx.conf /etc/nginx/
 COPY conf/supervisord.conf /etc/supervisord.conf
 COPY init.sh /
+
+# php7 extensions
+RUN	apk add --no-cache php7-bcmath php7-ctype php7-xmlreader php7-xmlwriter php7-session php7-sockets php7-gettext php7-ldap
 
 CMD ["sh", "/init.sh"]
