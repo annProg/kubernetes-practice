@@ -30,6 +30,7 @@
 			float: right;
 			width: 49%;
 		}
+		.footer{position:absolute;bottom:0;width:100%;height:100px;background-color: #ffc0cb;}
 	</style>
 </head>
 <body>
@@ -59,5 +60,6 @@ print_r(build_table(getenv(), "环境变量列表"));
 ?>
 	</div>
 </div>
+<div class="footer">2018-11-29 version 5.0</div>
 </body>
 </html>
