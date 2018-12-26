@@ -13,10 +13,11 @@ PHP_FPM_MAX_CHILDREN=`getEnv "$PHP_FPM_MAX_CHILDREN" "100"`
 PHP_FPM_START_SERVERS=`getEnv "$PHP_FPM_START_SERVERS" "30"`
 PHP_FPM_MIN_SPARE_SERVERS=`getEnv "$PHP_FPM_MIN_SPARE_SERVERS" "10"`
 PHP_FPM_MAX_SPARE_SERVERS=`getEnv "$PHP_FPM_MAX_SPARE_SERVERS" "50"`
-PHP_FPM_MAX_REQUESTS=`getEnv "$PHP_FPM_MAX_REQUESTS" "500"`
+PHP_FPM_MAX_REQUESTS=`getEnv "$PHP_FPM_MAX_REQUESTS" "100000"`
 
 NGINX_WORKER_CONNECTIONS=`getEnv "$NGINX_WORKER_CONNECTIONS" "65535"`
 NGINX_WORKER_RLIMIT_NOFILE=`getEnv "$NGINX_WORKER_RLIMIT_NOFILE" "80000"`
+NGINX_WORKER_PROCESSES=`getEnv "$NGINX_WORKER_PROCESSES" "auto"`
 
 PHP_CONF="/etc/php7/php-fpm.d/www.conf"
 NGINX_CONF="/etc/nginx/nginx.conf"
@@ -30,7 +31,23 @@ sed -i "s/^;pm.max_requests = .*/pm.max_requests = $PHP_FPM_MAX_REQUESTS/g" $PHP
 
 sed -i "s/worker_rlimit_nofile .*/worker_rlimit_nofile $NGINX_WORKER_RLIMIT_NOFILE;/g" $NGINX_CONF
 sed -i "s/worker_connections .*/worker_connections $NGINX_WORKER_CONNECTIONS;/g" $NGINX_CONF
+sed -i "s/worker_processes .*/worker_processes $NGINX_WORKER_PROCESSES;/g" $NGINX_CONF
 
+# catch_workers_output = yes 日志输出到stdout stderr
+echo "catch_workers_output = yes" >> $PHP_CONF
 chown -R nobody.nobody /home/wwwroot/default/
-env |grep -v "=$" | sed "s/\(.*\)=\(.*\)/env[\1]='\2'/" >> /etc/php7/php-fpm.d/www.conf
-supervisord -n
+env |grep -v "=$" | grep "=" | sed -r "s/([a-zA-Z0-9_.]+)=(.*)/env[\1]='\2'/" >> $PHP_CONF
+
+# gbalancer 配置
+gbconf="$APP_CONFIG_PATH/GBALANCER"
+if [ -f $gbconf ];then
+	daemonize -o /dev/stdout -e /dev/stderr /usr/bin/gbalancer -config=$gbconf
+fi
+
+# 自定义脚本
+if [ -f /app.sh ];then
+	source /app.sh
+fi
+crond
+php-fpm7 -D
+exec nginx
