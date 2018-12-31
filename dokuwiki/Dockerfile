@@ -22,11 +22,18 @@ RUN wget https://github.com/xif-fr/dokuwiki-plugin-catlist/zipball/master -O cat
 RUN unzip catlist.zip
 RUN mv xif-fr-dokuwiki-plugin-catlist-* catlist
 
+# csv插件
+RUN wget https://github.com/cosmocode/csv/zipball/master -O csv.zip
+RUN unzip csv.zip
+RUN mv cosmocode-csv-* csv
+
 FROM registry.cn-beijing.aliyuncs.com/kubebase/php7-nginx:1.2
 COPY --from=builder /wiki/dokuwiki-release_stable_2018-04-22a/ /home/wwwroot/default/
 COPY --from=builder /wiki/markdowku /home/wwwroot/default/lib/plugins/markdowku
 COPY --from=builder /wiki/plot /home/wwwroot/default/lib/plugins/plot
 COPY --from=builder /wiki/catlist /home/wwwroot/default/lib/plugins/catlist
+COPY --from=builder /wiki/csv /home/wwwroot/default/lib/plugins/csv
+
 COPY conf/default.conf /etc/nginx/conf.d/default.conf
 COPY conf/dokuwiki_rewrite.conf /etc/nginx/dokuwiki_rewrite.conf
 COPY app.sh /app.sh
