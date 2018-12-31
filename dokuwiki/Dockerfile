@@ -57,6 +57,11 @@ RUN wget https://github.com/turnermm/epub/archive/master.zip -O epub.zip
 RUN unzip epub.zip
 RUN mv epub-master epub
 
+# wrap插件
+RUN wget https://github.com/selfthinker/dokuwiki_plugin_wrap/archive/stable.zip -O wrap.zip
+RUN unzip wrap.zip
+RUN mv dokuwiki_plugin_wrap-stable wrap
+
 FROM registry.cn-beijing.aliyuncs.com/kubebase/php7-nginx:1.2
 COPY --from=builder /wiki/dokuwiki-release_stable_2018-04-22a/ /home/wwwroot/default/
 COPY --from=builder /wiki/markdowku /home/wwwroot/default/lib/plugins/markdowku
@@ -69,6 +74,7 @@ COPY --from=builder /wiki/mathjax /home/wwwroot/default/lib/plugins/mathjax
 COPY --from=builder /wiki/move /home/wwwroot/default/lib/plugins/move
 COPY --from=builder /wiki/todo /home/wwwroot/default/lib/plugins/todo
 COPY --from=builder /wiki/epub /home/wwwroot/default/lib/plugins/epub
+COPY --from=builder /wiki/wrap /home/wwwroot/default/lib/plugins/wrap
 
 COPY conf/default.conf /etc/nginx/conf.d/default.conf
 COPY conf/dokuwiki_rewrite.conf /etc/nginx/dokuwiki_rewrite.conf
