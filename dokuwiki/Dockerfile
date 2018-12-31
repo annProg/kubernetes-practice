@@ -17,10 +17,16 @@ RUN wget https://github.com/annProg/dokuwiki-plot/archive/v2.3.4.tar.gz -O plot.
 RUN tar zxvf plot.tar.gz
 RUN mv dokuwiki-plot-2.3.4 plot
 
+# catlist插件
+RUN wget https://github.com/xif-fr/dokuwiki-plugin-catlist/zipball/master -O catlist.zip
+RUN unzip catlist.zip
+RUN mv xif-fr-dokuwiki-plugin-catlist-* catlist
+
 FROM registry.cn-beijing.aliyuncs.com/kubebase/php7-nginx:1.2
 COPY --from=builder /wiki/dokuwiki-release_stable_2018-04-22a/ /home/wwwroot/default/
 COPY --from=builder /wiki/markdowku /home/wwwroot/default/lib/plugins/markdowku
 COPY --from=builder /wiki/plot /home/wwwroot/default/lib/plugins/plot
+COPY --from=builder /wiki/catlist /home/wwwroot/default/lib/plugins/catlist
 COPY conf/default.conf /etc/nginx/conf.d/default.conf
 COPY app.sh /app.sh
 
