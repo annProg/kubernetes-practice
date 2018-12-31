@@ -13,6 +13,10 @@ PWD =$(shell pwd)
 # k8s预定义的APP_CONFIG_PATH环境变量默认值为/run/secret/appconfig
 APP_CONFIG_PATH ?= /run/secret/appconfig
 
+GITREPO ?=
+ID_RSA ?= 
+ID_RSA_PUB ?=
+
 all: build push up
 
 build:
@@ -28,7 +32,7 @@ run:
 ifeq ($(exists), yes)
 	docker stop $(APP);docker rm $(APP)
 endif
-	docker run --name $(APP) -d --env-file $(PWD)/debug/conf/ENV --env APP_CONFIG_PATH=$(APP_CONFIG_PATH) -v $(PWD)/debug/conf:$(APP_CONFIG_PATH) -v $(PWD)/debug/data:/home/wwwroot/default/data -p 8080:80 $(IMAGE):latest
+	docker run --name $(APP) -d --env-file $(PWD)/debug/conf/ENV --env GITREPO=$(GITREPO) -v $(ID_RSA):$(APP_CONFIG_PATH)/ID_RSA -v $(ID_RSA_PUB):$(APP_CONFIG_PATH)/ID_RSA_PUB --env APP_CONFIG_PATH=$(APP_CONFIG_PATH) -v $(PWD)/debug/conf:$(APP_CONFIG_PATH) -v $(PWD)/debug/data:/home/wwwroot/default/data -p 8080:80 $(IMAGE):latest
 
 up:
 	sleep 1;echo;curl -s "$(CMDBAPI)?cluster=$(CLUSTER)&app=$(APP)";echo

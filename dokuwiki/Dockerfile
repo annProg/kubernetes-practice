@@ -88,6 +88,7 @@ COPY --from=builder /wiki/wrap /home/wwwroot/default/lib/plugins/wrap
 COPY --from=builder /wiki/bookcreator /home/wwwroot/default/lib/plugins/bookcreator
 COPY --from=builder /wiki/gitbacked /home/wwwroot/default/lib/plugins/gitbacked
 
+RUN apk add --no-cache git openssh-client
 COPY conf/default.conf /etc/nginx/conf.d/default.conf
 COPY conf/dokuwiki_rewrite.conf /etc/nginx/dokuwiki_rewrite.conf
 COPY app.sh /app.sh
