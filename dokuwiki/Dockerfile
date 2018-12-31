@@ -47,6 +47,11 @@ RUN wget https://github.com/michitux/dokuwiki-plugin-move/zipball/master -O move
 RUN unzip move.zip
 RUN mv michitux-dokuwiki-plugin-move-* move
 
+# todo插件
+RUN wget https://github.com/leibler/dokuwiki-plugin-todo/archive/stable.zip -O todo.zip
+RUN unzip todo.zip
+RUN mv dokuwiki-plugin-todo-stable todo
+
 FROM registry.cn-beijing.aliyuncs.com/kubebase/php7-nginx:1.2
 COPY --from=builder /wiki/dokuwiki-release_stable_2018-04-22a/ /home/wwwroot/default/
 COPY --from=builder /wiki/markdowku /home/wwwroot/default/lib/plugins/markdowku
@@ -57,6 +62,7 @@ COPY --from=builder /wiki/dw2pdf /home/wwwroot/default/lib/plugins/dw2pdf
 COPY --from=builder /wiki/imgpaste /home/wwwroot/default/lib/plugins/imgpaste
 COPY --from=builder /wiki/mathjax /home/wwwroot/default/lib/plugins/mathjax
 COPY --from=builder /wiki/move /home/wwwroot/default/lib/plugins/move
+COPY --from=builder /wiki/todo /home/wwwroot/default/lib/plugins/todo
 
 COPY conf/default.conf /etc/nginx/conf.d/default.conf
 COPY conf/dokuwiki_rewrite.conf /etc/nginx/dokuwiki_rewrite.conf
