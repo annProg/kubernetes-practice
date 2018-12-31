@@ -12,3 +12,4 @@ $conf['plugin']['dw2pdf']['maxbookmarks'] = 4;
 $conf['plugin']['dw2pdf']['template'] = 'book_ten';
 $conf['plugin']['dw2pdf']['output'] = 'browser';
 $conf['plugin']['dw2pdf']['qrcodesize'] = '80x80';
+$conf['plugin']['mathjax']['url'] = '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML&noContrib';
