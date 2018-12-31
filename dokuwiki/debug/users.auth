@@ -1,0 +1,5 @@
+# users.auth.php
+# <?php exit()?>
+# Don't modify the lines above
+
+admin:$1$lgH1ByTw$3agbZNBd7/JrVrUflGVNp/:annProg:admin@admin.com:admin,user

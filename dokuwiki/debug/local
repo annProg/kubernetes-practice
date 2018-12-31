@@ -1,0 +1,8 @@
+<?php
+$conf['title'] = "OpWiki";
+$conf['lang'] = 'zh';
+$conf['license'] = 'cc-by-sa';
+$conf['allowdebug'] = 0;
+$conf['useacl'] = 1;
+$conf['superuser'] = '@admin';
+$conf['disableactions'] = 'register';
