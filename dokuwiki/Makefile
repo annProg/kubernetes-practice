@@ -28,7 +28,7 @@ run:
 ifeq ($(exists), yes)
 	docker stop $(APP);docker rm $(APP)
 endif
-	docker run --name $(APP) -d --env APP_CONFIG_PATH=$(APP_CONFIG_PATH) -v $(PWD)/debug/conf:$(APP_CONFIG_PATH) -v $(PWD)/debug/data:/home/wwwroot/default/data -p 8080:80 $(IMAGE):latest
+	docker run --name $(APP) -d --env-file $(PWD)/debug/conf/ENV --env APP_CONFIG_PATH=$(APP_CONFIG_PATH) -v $(PWD)/debug/conf:$(APP_CONFIG_PATH) -v $(PWD)/debug/data:/home/wwwroot/default/data -p 8080:80 $(IMAGE):latest
 
 up:
 	sleep 1;echo;curl -s "$(CMDBAPI)?cluster=$(CLUSTER)&app=$(APP)";echo
