@@ -35,3 +35,5 @@ DATADIR="$WIKIROOT/data"
 for item in attic cache index locks media media_attic media_meta meta pages tmp; do
 	[ ! -d $DATADIR/$item ] && mkdir $DATADIR/$item
 done
+# 需要设置权限
+chown -R nobody.nobody $DATADIR
