@@ -32,6 +32,11 @@ RUN wget https://github.com/annProg/dokuwiki-plugin-dw2pdf/archive/ann-v1.0.tar.
 RUN tar zxvf dw2pdf.tar.gz
 RUN mv dokuwiki-plugin-dw2pdf-* dw2pdf
 
+# imgPaste插件
+RUN wget https://github.com/cosmocode/dokuwiki-plugin-imgpaste/zipball/master -O imgpaste.zip
+RUN unzip imgpaste.zip
+RUN mv cosmocode-dokuwiki-plugin-imgpaste-* imgpaste
+
 FROM registry.cn-beijing.aliyuncs.com/kubebase/php7-nginx:1.2
 COPY --from=builder /wiki/dokuwiki-release_stable_2018-04-22a/ /home/wwwroot/default/
 COPY --from=builder /wiki/markdowku /home/wwwroot/default/lib/plugins/markdowku
@@ -39,6 +44,7 @@ COPY --from=builder /wiki/plot /home/wwwroot/default/lib/plugins/plot
 COPY --from=builder /wiki/catlist /home/wwwroot/default/lib/plugins/catlist
 COPY --from=builder /wiki/csv /home/wwwroot/default/lib/plugins/csv
 COPY --from=builder /wiki/dw2pdf /home/wwwroot/default/lib/plugins/dw2pdf
+COPY --from=builder /wiki/imgpaste /home/wwwroot/default/lib/plugins/imgpaste
 
 COPY conf/default.conf /etc/nginx/conf.d/default.conf
 COPY conf/dokuwiki_rewrite.conf /etc/nginx/dokuwiki_rewrite.conf
