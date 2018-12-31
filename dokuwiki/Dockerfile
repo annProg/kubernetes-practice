@@ -42,6 +42,11 @@ RUN wget https://github.com/liffiton/dokuwiki-plugin-mathjax/archive/master.zip 
 RUN unzip mathjax.zip
 RUN mv dokuwiki-plugin-mathjax-master mathjax
 
+# move插件
+RUN wget https://github.com/michitux/dokuwiki-plugin-move/zipball/master -O move.zip
+RUN unzip move.zip
+RUN mv michitux-dokuwiki-plugin-move-* move
+
 FROM registry.cn-beijing.aliyuncs.com/kubebase/php7-nginx:1.2
 COPY --from=builder /wiki/dokuwiki-release_stable_2018-04-22a/ /home/wwwroot/default/
 COPY --from=builder /wiki/markdowku /home/wwwroot/default/lib/plugins/markdowku
@@ -51,6 +56,7 @@ COPY --from=builder /wiki/csv /home/wwwroot/default/lib/plugins/csv
 COPY --from=builder /wiki/dw2pdf /home/wwwroot/default/lib/plugins/dw2pdf
 COPY --from=builder /wiki/imgpaste /home/wwwroot/default/lib/plugins/imgpaste
 COPY --from=builder /wiki/mathjax /home/wwwroot/default/lib/plugins/mathjax
+COPY --from=builder /wiki/move /home/wwwroot/default/lib/plugins/move
 
 COPY conf/default.conf /etc/nginx/conf.d/default.conf
 COPY conf/dokuwiki_rewrite.conf /etc/nginx/dokuwiki_rewrite.conf
