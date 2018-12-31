@@ -28,3 +28,10 @@ fi
 if [ ! -f $ACL ]; then
 	echo -e "* @ALL 1\n* @user 8" > $ACL
 fi
+
+# data目录
+DATADIR="$WIKIROOT/data"
+
+for item in attic cache index locks media media_attic media_meta meta pages tmp; do
+	[ ! -d $DATADIR/$item ] && mkdir $DATADIR/$item
+done

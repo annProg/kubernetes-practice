@@ -5,6 +5,8 @@ WORKDIR /wiki
 RUN wget https://github.com/splitbrain/dokuwiki/archive/release_stable_2018-04-22a.tar.gz -O stable.tar.gz
 RUN tar zxvf stable.tar.gz
 RUN rm -f dokuwiki-release_stable_2018-04-22a/install.php
+# data目录需要挂载volume
+RUN mv dokuwiki-release_stable_2018-04-22a/data /tmp/
 
 FROM registry.cn-beijing.aliyuncs.com/kubebase/php7-nginx:1.2
 COPY --from=builder /wiki/dokuwiki-release_stable_2018-04-22a/ /home/wwwroot/default/
