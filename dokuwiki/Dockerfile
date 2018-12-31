@@ -12,9 +12,15 @@ RUN mv dokuwiki-release_stable_2018-04-22a/data /tmp/
 RUN wget https://komkon2.de/markdowku/markdowku.tgz
 RUN tar zxvf markdowku.tgz
 
+# dokuwiki-plot插件
+RUN wget https://github.com/annProg/dokuwiki-plot/archive/v2.3.4.tar.gz -O plot.tar.gz
+RUN tar zxvf plot.tar.gz
+RUN mv dokuwiki-plot-2.3.4 plot
+
 FROM registry.cn-beijing.aliyuncs.com/kubebase/php7-nginx:1.2
 COPY --from=builder /wiki/dokuwiki-release_stable_2018-04-22a/ /home/wwwroot/default/
 COPY --from=builder /wiki/markdowku /home/wwwroot/default/lib/plugins/markdowku
+COPY --from=builder /wiki/plot /home/wwwroot/default/lib/plugins/plot
 COPY conf/default.conf /etc/nginx/conf.d/default.conf
 COPY app.sh /app.sh
 
