@@ -62,6 +62,11 @@ RUN wget https://github.com/selfthinker/dokuwiki_plugin_wrap/archive/stable.zip 
 RUN unzip wrap.zip
 RUN mv dokuwiki_plugin_wrap-stable wrap
 
+# bookcreator插件
+RUN wget https://github.com/Klap-in/dokuwiki-plugin-bookcreator/archive/master.zip -O bookcreator.zip
+RUN unzip bookcreator.zip
+RUN mv dokuwiki-plugin-bookcreator-master bookcreator
+
 FROM registry.cn-beijing.aliyuncs.com/kubebase/php7-nginx:1.2
 COPY --from=builder /wiki/dokuwiki-release_stable_2018-04-22a/ /home/wwwroot/default/
 COPY --from=builder /wiki/markdowku /home/wwwroot/default/lib/plugins/markdowku
@@ -75,6 +80,7 @@ COPY --from=builder /wiki/move /home/wwwroot/default/lib/plugins/move
 COPY --from=builder /wiki/todo /home/wwwroot/default/lib/plugins/todo
 COPY --from=builder /wiki/epub /home/wwwroot/default/lib/plugins/epub
 COPY --from=builder /wiki/wrap /home/wwwroot/default/lib/plugins/wrap
+COPY --from=builder /wiki/bookcreator /home/wwwroot/default/lib/plugins/bookcreator
 
 COPY conf/default.conf /etc/nginx/conf.d/default.conf
 COPY conf/dokuwiki_rewrite.conf /etc/nginx/dokuwiki_rewrite.conf
