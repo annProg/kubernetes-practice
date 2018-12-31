@@ -28,5 +28,6 @@ COPY --from=builder /wiki/markdowku /home/wwwroot/default/lib/plugins/markdowku
 COPY --from=builder /wiki/plot /home/wwwroot/default/lib/plugins/plot
 COPY --from=builder /wiki/catlist /home/wwwroot/default/lib/plugins/catlist
 COPY conf/default.conf /etc/nginx/conf.d/default.conf
+COPY conf/dokuwiki_rewrite.conf /etc/nginx/dokuwiki_rewrite.conf
 COPY app.sh /app.sh
 
