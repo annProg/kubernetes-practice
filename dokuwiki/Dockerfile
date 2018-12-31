@@ -90,6 +90,6 @@ COPY --from=builder /wiki/gitbacked /home/wwwroot/default/lib/plugins/gitbacked
 
 COPY conf/default.conf /etc/nginx/conf.d/default.conf
 COPY conf/dokuwiki_rewrite.conf /etc/nginx/dokuwiki_rewrite.conf
-WORKDIR /home/wwwroot/default
 COPY app.sh /app.sh
+WORKDIR /home/wwwroot/default
 
