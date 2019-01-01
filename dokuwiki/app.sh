@@ -77,10 +77,6 @@ function stepPluginGitbacked() {
 	setConf plugin gitbacked periodicPull "1"
 	setConf plugin gitbacked pushAfterCommit "1"
 
-	# 设置
-	gitCmd 'config user.name "nobody"'
-	gitCmd 'config user.email "dokuwiki@k8s.cluster"'
-
 	# 需要设置HOME 参见 https://stackoverflow.com/a/27151021 解决  unable to access '/root/.config/git/attributes' 报错
 	export HOME=/home/nobody
 
@@ -94,6 +90,11 @@ function stepPluginGitbacked() {
 		gitCmd init
 		gitCmd "remote add origin $GITREPO"
 	fi
+
+	# 设置
+	gitCmd 'config user.name "nobody"'
+	gitCmd 'config user.email "dokuwiki@k8s.cluster"'
+
 	gitCmd "pull origin master"
 
 	for item in attic cache index locks media media_attic media_meta meta pages tmp; do
