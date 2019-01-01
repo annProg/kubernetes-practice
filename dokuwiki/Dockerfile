@@ -8,7 +8,7 @@ RUN rm -f dokuwiki-release_stable_2018-04-22a/install.php
 # data目录需要挂载volume
 RUN mv dokuwiki-release_stable_2018-04-22a/data /tmp/
 
-RUN mkdir plugins
+RUN mkdir plugins tpl
 
 # markdowku插件
 RUN wget https://komkon2.de/markdowku/markdowku.tgz
@@ -75,13 +75,22 @@ RUN wget https://github.com/woolfg/dokuwiki-plugin-gitbacked/archive/master.zip 
 RUN unzip gitbacked.zip
 RUN mv dokuwiki-plugin-gitbacked-master plugins/gitbacked
 
+# bootstrap3模板
+RUN wget https://github.com/LotarProject/dokuwiki-template-bootstrap3/zipball/master -O bootstrap3.zip
+RUN unzip bootstrap3.zip
+RUN mv LotarProject-dokuwiki-template-bootstrap3-* tpl/bootstrap3
+
+
+# dokuwiki镜像
 FROM registry.cn-beijing.aliyuncs.com/kubebase/php7-nginx:1.2
-COPY --from=builder /wiki/dokuwiki-release_stable_2018-04-22a/ /home/wwwroot/default/
-COPY --from=builder /wiki/plugins/ /home/wwwroot/default/lib/plugins/
 
 RUN apk add --no-cache git openssh-client
 COPY conf/default.conf /etc/nginx/conf.d/default.conf
 COPY conf/dokuwiki_rewrite.conf /etc/nginx/dokuwiki_rewrite.conf
+
+COPY --from=builder /wiki/dokuwiki-release_stable_2018-04-22a/ /home/wwwroot/default/
+COPY --from=builder /wiki/plugins/ /home/wwwroot/default/lib/plugins/
+COPY --from=builder /wiki/tpl/ /home/wwwroot/default/lib/tpl/
+
 COPY app.sh /app.sh
 WORKDIR /home/wwwroot/default
-

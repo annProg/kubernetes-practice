@@ -15,75 +15,102 @@ set -x
 # 为了和普通环境变量区分，普通环境变量请使用大写
 
 WIKIROOT=/home/wwwroot/default
-
-for item in `ls $APP_CONFIG_PATH`; do 
-	echo $item | grep -E '[A-Z]' && continue          # 跳过普通环境变量
-	cp $APP_CONFIG_PATH/$item $WIKIROOT/conf/${item}".php"
-done
-
-# default acl and account
-AUTH="$WIKIROOT/conf/users.auth.php"
-ACL="$WIKIROOT/conf/acl.auth.php"
-if [ ! -f $AUTH ]; then
-	echo 'admin:$1$lgH1ByTw$3agbZNBd7/JrVrUflGVNp/:annProg:admin@admin.com:admin,user' > $AUTH
-fi
-
-if [ ! -f $ACL ]; then
-	echo -e "* @ALL 1\n* @user 8" > $ACL
-fi
-
-# 设置SSH KEY
-SSHDIR=/home/nobody/.ssh/
-echo "SSHDIR: $SSHDIR"
-[ ! -d $SSHDIR ] && mkdir -p $SSHDIR
-[ -f "$APP_CONFIG_PATH/ID_RSA" ] && cp $APP_CONFIG_PATH/ID_RSA $SSHDIR/id_rsa
-[ -f "$APP_CONFIG_PATH/ID_RSA_PUB" ] && cp $APP_CONFIG_PATH/ID_RSA_PUB $SSHDIR/id_rsa.pub
-echo "I am `whoami`"
-echo "StrictHostKeyChecking no" >> $SSHDIR/config
-chown -R nobody.nobody /home/nobody
-
-# gitbacked设置，忽略cache tmp目录
-# 将git作为默认存储，容器更新后拉取远程仓库
-# 为了提高git pull速度，需要有持久化存储。如果用hostPath，需要固定机器
 MAINCONF="$WIKIROOT/conf/local.php"
-grep "ignorePaths" $MAINCONF || echo "\$conf['plugin']['gitbacked']['ignorePaths'] = 'cache,tmp';" >> $MAINCONF
-grep "periodicPull" $MAINCONF || echo "\$conf['plugin']['gitbacked']['periodicPull'] = 1;" >> $MAINCONF
-grep "pushAfterCommit" $MAINCONF || echo "\$conf['plugin']['gitbacked']['pushAfterCommit'] = 1;" >> $MAINCONF
-
-# data目录
 DATADIR="$WIKIROOT/data"
-# 需要设置权限
-chown -R nobody.nobody $DATADIR
-cd $DATADIR
 
+function setConf() {
+	# $1 type eg. plugin or tpl
+	# $2 plugin or tpl name
+	# $3 config item
+	# $4 config value
+	grep "['$1']['$2']['$3']" $MAINCONF || echo "\$conf['$1']['$2']['$3'] = '$4';" >> $MAINCONF
+}
+
+# app.sh是以root用户运行的，php程序以nobody用户运行，因此git相关命令也应用nobody运行，否则会有权限问题
 function gitCmd() {
 	su - nobody -s /bin/sh -c "cd $DATADIR;git $1"
 }
 
-isEmpty=`ls $DATADIR |wc -l`
-[ $isEmpty -eq 0 ] && gitCmd "clone $GITREPO $DATADIR"
-if [ ! -d $DATADIR/.git ];then
-   	gitCmd init
-	gitCmd "remote add origin $GITREPO"
-fi
-gitCmd "pull origin master"
+function stepPreConf() {
+	for item in `ls $APP_CONFIG_PATH`; do 
+		echo $item | grep -E '[A-Z]' && continue          # 跳过普通环境变量
+		cp $APP_CONFIG_PATH/$item $WIKIROOT/conf/${item}".php"
+	done
 
-for item in attic cache index locks media media_attic media_meta meta pages tmp; do
-	[ ! -d $DATADIR/$item ] && mkdir $DATADIR/$item
-done
+	# default acl and account
+	AUTH="$WIKIROOT/conf/users.auth.php"
+	ACL="$WIKIROOT/conf/acl.auth.php"
+	if [ ! -f $AUTH ]; then
+		echo 'admin:$1$lgH1ByTw$3agbZNBd7/JrVrUflGVNp/:annProg:admin@admin.com:admin,user' > $AUTH
+	fi
 
-for item in cache tmp index locks;do
-	grep "$item/" .gitignore|| echo "$item/" >> .gitignore
-done
+	if [ ! -f $ACL ]; then
+		echo -e "* @ALL 1\n* @user 8" > $ACL
+	fi
+}
 
-chown -R nobody.nobody $DATADIR
+# 设置SSH KEY
+function sshKey() {
+	SSHDIR=/home/nobody/.ssh/
+	echo "SSHDIR: $SSHDIR"
+	[ ! -d $SSHDIR ] && mkdir -p $SSHDIR
+	[ -f "$APP_CONFIG_PATH/ID_RSA" ] && cp $APP_CONFIG_PATH/ID_RSA $SSHDIR/id_rsa
+	[ -f "$APP_CONFIG_PATH/ID_RSA_PUB" ] && cp $APP_CONFIG_PATH/ID_RSA_PUB $SSHDIR/id_rsa.pub
+	echo "I am `whoami`"
+	echo "StrictHostKeyChecking no" >> $SSHDIR/config
+	chown -R nobody.nobody /home/nobody
+}
 
-changes=`git status --short |wc -l`
-if [ $changes -gt 0 ];then
-	git config --get user.email || git config user.email "dokuwiki@k8s.cluster"
-	git config --get user.name || git config user.name "nobody"
-	git add -A
-	git commit -m "commit"
-	gitCmd "push -u origin master"
-fi
+# gitbacked设置，忽略cache tmp目录
+# 将git作为默认存储，容器更新后拉取远程仓库
+# 为了提高git pull速度，需要有持久化存储。如果用hostPath，需要固定机器
+function stepPluginGitbacked() {
+	sshKey
+	# 设置默认值
+	setConf plugin gitbacked ignorePaths "cache,tmp,index,locks"
+	setConf plugin gitbacked periodicPull "1"
+	setConf plugin gitbacked pushAfterCommit "1"
 
+	# 需要设置权限
+	chown -R nobody.nobody $DATADIR
+	cd $DATADIR
+
+	isEmpty=`ls $DATADIR |wc -l`
+	[ $isEmpty -eq 0 ] && gitCmd "clone $GITREPO $DATADIR"
+	if [ ! -d $DATADIR/.git ];then
+		gitCmd init
+		gitCmd "remote add origin $GITREPO"
+	fi
+	gitCmd "pull origin master"
+
+	for item in attic cache index locks media media_attic media_meta meta pages tmp; do
+		[ ! -d $DATADIR/$item ] && mkdir $DATADIR/$item
+	done
+
+	for item in cache tmp index locks;do
+		grep "$item/" .gitignore|| echo "$item/" >> .gitignore
+	done
+
+	chown -R nobody.nobody $DATADIR
+
+	changes=`git status --short |wc -l`
+	if [ $changes -gt 0 ];then
+		git config --get user.email || git config user.email "dokuwiki@k8s.cluster"
+		git config --get user.name || git config user.name "nobody"
+		git add -A
+		git commit -m "commit"
+		gitCmd "push -u origin master"
+	fi
+}
+
+function stepTplBootstrap3() {
+	setConf tpl bootstrap3 showThemeSwitcher "1"
+	setConf tpl bootstrap3 showPageIcons "1"
+	setConf tpl bootstrap3 showPurgePageCache "logged"
+	setConf tpl bootstrap3 pageIcons "feed,send-mail,permalink,print,help"
+}
+
+# 执行以step开头的函数
+stepPreConf
+stepPluginGitbacked
+stepTplBootstrap3
