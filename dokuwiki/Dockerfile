@@ -80,6 +80,11 @@ RUN wget https://github.com/LotarProject/dokuwiki-template-bootstrap3/zipball/ma
 RUN unzip bootstrap3.zip
 RUN mv LotarProject-dokuwiki-template-bootstrap3-* tpl/bootstrap3
 
+# tag插件
+RUN wget https://github.com/dokufreaks/plugin-tag/tarball/master -O tag.tar.gz
+RUN tar zxvf tag.tar.gz
+RUN mv dokufreaks-plugin-tag-* plugins/tag
+
 
 # dokuwiki镜像
 FROM registry.cn-beijing.aliyuncs.com/kubebase/php7-nginx:1.2
@@ -89,8 +94,8 @@ COPY conf/default.conf /etc/nginx/conf.d/default.conf
 COPY conf/dokuwiki_rewrite.conf /etc/nginx/dokuwiki_rewrite.conf
 
 COPY --from=builder /wiki/dokuwiki-release_stable_2018-04-22a/ /home/wwwroot/default/
-COPY --from=builder /wiki/plugins/ /home/wwwroot/default/lib/plugins/
 COPY --from=builder /wiki/tpl/ /home/wwwroot/default/lib/tpl/
+COPY --from=builder /wiki/plugins/ /home/wwwroot/default/lib/plugins/
 
 COPY app.sh /app.sh
 WORKDIR /home/wwwroot/default
