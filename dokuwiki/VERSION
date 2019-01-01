@@ -1,3 +1,6 @@
+## v0.7
+- add php7-xml. fix rss load error
+
 ## v0.6
 - chown nobody.nobody conf/*.php. allow config by dokuwiki management tool
 
