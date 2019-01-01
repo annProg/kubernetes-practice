@@ -39,6 +39,16 @@ for item in `ls $APP_CONFIG_PATH`; do
 done
 ```
 
+### git存储
+如果没有挂载持久化的存储，推荐使用git存储，需要配置一下环境变量
+
+```
+GITREPO
+ID_RSA
+ID_RSA_PUB
+```
+如果git使用https方式，则可以不配置ID_RSA和ID_RSA_PUB
+
 ## 管理员密码
 通过`tools/smd5.php`设置
 
