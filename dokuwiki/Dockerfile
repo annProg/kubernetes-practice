@@ -8,85 +8,76 @@ RUN rm -f dokuwiki-release_stable_2018-04-22a/install.php
 # data目录需要挂载volume
 RUN mv dokuwiki-release_stable_2018-04-22a/data /tmp/
 
+RUN mkdir plugins
+
 # markdowku插件
 RUN wget https://komkon2.de/markdowku/markdowku.tgz
 RUN tar zxvf markdowku.tgz
+RUN mv markdowku plugins
 
 # dokuwiki-plot插件
 RUN wget https://github.com/annProg/dokuwiki-plot/archive/v2.3.4.tar.gz -O plot.tar.gz
 RUN tar zxvf plot.tar.gz
-RUN mv dokuwiki-plot-2.3.4 plot
+RUN mv dokuwiki-plot-2.3.4 plugins/plot
 
 # catlist插件
 RUN wget https://github.com/xif-fr/dokuwiki-plugin-catlist/zipball/master -O catlist.zip
 RUN unzip catlist.zip
-RUN mv xif-fr-dokuwiki-plugin-catlist-* catlist
+RUN mv xif-fr-dokuwiki-plugin-catlist-* plugins/catlist
 
 # csv插件
 RUN wget https://github.com/cosmocode/csv/zipball/master -O csv.zip
 RUN unzip csv.zip
-RUN mv cosmocode-csv-* csv
+RUN mv cosmocode-csv-* plugins/csv
 
-# dw2pdf 插件
+# dw2pdf插件
 RUN wget https://github.com/annProg/dokuwiki-plugin-dw2pdf/archive/ann-v1.0.tar.gz -O dw2pdf.tar.gz
 RUN tar zxvf dw2pdf.tar.gz
-RUN mv dokuwiki-plugin-dw2pdf-* dw2pdf
+RUN mv dokuwiki-plugin-dw2pdf-* plugins/dw2pdf
 
 # imgPaste插件
 RUN wget https://github.com/cosmocode/dokuwiki-plugin-imgpaste/zipball/master -O imgpaste.zip
 RUN unzip imgpaste.zip
-RUN mv cosmocode-dokuwiki-plugin-imgpaste-* imgpaste
+RUN mv cosmocode-dokuwiki-plugin-imgpaste-* plugins/imgpaste
 
 # mathjax插件
 RUN wget https://github.com/liffiton/dokuwiki-plugin-mathjax/archive/master.zip -O mathjax.zip
 RUN unzip mathjax.zip
-RUN mv dokuwiki-plugin-mathjax-master mathjax
+RUN mv dokuwiki-plugin-mathjax-master plugins/mathjax
 
 # move插件
 RUN wget https://github.com/michitux/dokuwiki-plugin-move/zipball/master -O move.zip
 RUN unzip move.zip
-RUN mv michitux-dokuwiki-plugin-move-* move
+RUN mv michitux-dokuwiki-plugin-move-* plugins/move
 
 # todo插件
 RUN wget https://github.com/leibler/dokuwiki-plugin-todo/archive/stable.zip -O todo.zip
 RUN unzip todo.zip
-RUN mv dokuwiki-plugin-todo-stable todo
+RUN mv dokuwiki-plugin-todo-stable plugins/todo
 
 # epub插件
 RUN wget https://github.com/turnermm/epub/archive/master.zip -O epub.zip
 RUN unzip epub.zip
-RUN mv epub-master epub
+RUN mv epub-master plugins/epub
 
 # wrap插件
 RUN wget https://github.com/selfthinker/dokuwiki_plugin_wrap/archive/stable.zip -O wrap.zip
 RUN unzip wrap.zip
-RUN mv dokuwiki_plugin_wrap-stable wrap
+RUN mv dokuwiki_plugin_wrap-stable plugins/wrap
 
 # bookcreator插件
 RUN wget https://github.com/Klap-in/dokuwiki-plugin-bookcreator/archive/master.zip -O bookcreator.zip
 RUN unzip bookcreator.zip
-RUN mv dokuwiki-plugin-bookcreator-master bookcreator
+RUN mv dokuwiki-plugin-bookcreator-master plugins/bookcreator
 
 # gitbacked插件
 RUN wget https://github.com/woolfg/dokuwiki-plugin-gitbacked/archive/master.zip -O gitbacked.zip
 RUN unzip gitbacked.zip
-RUN mv dokuwiki-plugin-gitbacked-master gitbacked
+RUN mv dokuwiki-plugin-gitbacked-master plugins/gitbacked
 
 FROM registry.cn-beijing.aliyuncs.com/kubebase/php7-nginx:1.2
 COPY --from=builder /wiki/dokuwiki-release_stable_2018-04-22a/ /home/wwwroot/default/
-COPY --from=builder /wiki/markdowku /home/wwwroot/default/lib/plugins/markdowku
-COPY --from=builder /wiki/plot /home/wwwroot/default/lib/plugins/plot
-COPY --from=builder /wiki/catlist /home/wwwroot/default/lib/plugins/catlist
-COPY --from=builder /wiki/csv /home/wwwroot/default/lib/plugins/csv
-COPY --from=builder /wiki/dw2pdf /home/wwwroot/default/lib/plugins/dw2pdf
-COPY --from=builder /wiki/imgpaste /home/wwwroot/default/lib/plugins/imgpaste
-COPY --from=builder /wiki/mathjax /home/wwwroot/default/lib/plugins/mathjax
-COPY --from=builder /wiki/move /home/wwwroot/default/lib/plugins/move
-COPY --from=builder /wiki/todo /home/wwwroot/default/lib/plugins/todo
-COPY --from=builder /wiki/epub /home/wwwroot/default/lib/plugins/epub
-COPY --from=builder /wiki/wrap /home/wwwroot/default/lib/plugins/wrap
-COPY --from=builder /wiki/bookcreator /home/wwwroot/default/lib/plugins/bookcreator
-COPY --from=builder /wiki/gitbacked /home/wwwroot/default/lib/plugins/gitbacked
+COPY --from=builder /wiki/plugins/ /home/wwwroot/default/lib/plugins/
 
 RUN apk add --no-cache git openssh-client
 COPY conf/default.conf /etc/nginx/conf.d/default.conf
