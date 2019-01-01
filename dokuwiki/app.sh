@@ -25,7 +25,7 @@ function setConf() {
 	# $2 plugin or tpl name
 	# $3 config item
 	# $4 config value
-	grep "['$1']['$2']['$3']" $MAINCONF &>/dev/null|| echo "\$conf['$1']['$2']['$3'] = '$4';" >> $MAINCONF
+	grep "\['$1'\]\['$2'\]\['$3'\]" $MAINCONF &>/dev/null|| echo "\$conf['$1']['$2']['$3'] = '$4';" >> $MAINCONF
 }
 
 # app.sh是以root用户运行的，php程序以nobody用户运行，因此git相关命令也应用nobody运行，否则会有权限问题
@@ -77,9 +77,9 @@ function stepPluginGitbacked() {
 	setConf plugin gitbacked periodicPull "1"
 	setConf plugin gitbacked pushAfterCommit "1"
 
-	# 全局设置
-	gitCmd 'config --global user.name "nobody"'
-	gitCmd 'config --global user.email "dokuwiki@k8s.cluster"'
+	# 设置
+	gitCmd 'config user.name "nobody"'
+	gitCmd 'config user.email "dokuwiki@k8s.cluster"'
 
 	# 需要设置HOME 参见 https://stackoverflow.com/a/27151021 解决  unable to access '/root/.config/git/attributes' 报错
 	export HOME=/home/nobody

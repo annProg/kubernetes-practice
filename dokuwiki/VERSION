@@ -1,3 +1,6 @@
+## v0.4
+- fix bugs of app.sh
+
 ## v0.3
 - 没有挂载/home/wwwroot/default/data时直接退出
 
