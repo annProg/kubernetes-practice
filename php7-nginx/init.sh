@@ -36,7 +36,7 @@ sed -i "s/worker_processes .*/worker_processes $NGINX_WORKER_PROCESSES;/g" $NGIN
 # catch_workers_output = yes 日志输出到stdout stderr
 echo "catch_workers_output = yes" >> $PHP_CONF
 chown -R nobody.nobody /home/wwwroot/default/
-env |grep -v "=$" | grep "=" | sed -r "s/([a-zA-Z0-9_.]+)=(.*)/env[\1]='\2'/" >> $PHP_CONF
+env |grep -v "=$" | grep "=" | sed -r "s/([a-zA-Z0-9_.]+)=(.*)/env[\1]='\2'/" |grep "^env\[" >> $PHP_CONF
 
 # gbalancer 配置
 gbconf="$APP_CONFIG_PATH/GBALANCER"
