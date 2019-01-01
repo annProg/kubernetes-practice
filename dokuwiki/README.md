@@ -1,5 +1,29 @@
 # Dokuwiki docker image
-部署到kubernetes集群
+支持部署到kubernetes集群
+
+## 插件
+
+```
+plot
+catlist
+csv
+dw2pdf
+imgpaste
+mathjax
+move
+todo
+epub
+wrap
+bookcreator
+gitbacked
+tag
+```
+
+## 模板
+
+```
+bootstrap3
+```
 
 ## 配置
 - 环境变量名称为配置文件名称(不带php后缀)，脚本将复制文件到conf目录
