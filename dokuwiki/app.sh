@@ -18,6 +18,8 @@ WIKIROOT=/home/wwwroot/default
 MAINCONF="$WIKIROOT/conf/local.php"
 DATADIR="$WIKIROOT/data"
 
+[ ! -d $DATADIR ] && echo "Must mount volume to $DATADIR!" && exit 1
+
 function setConf() {
 	# $1 type eg. plugin or tpl
 	# $2 plugin or tpl name

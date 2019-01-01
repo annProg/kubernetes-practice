@@ -87,7 +87,7 @@ RUN mv dokufreaks-plugin-tag-* plugins/tag
 
 
 # dokuwiki镜像
-FROM registry.cn-beijing.aliyuncs.com/kubebase/php7-nginx:1.2
+FROM registry.cn-beijing.aliyuncs.com/kubebase/php7-nginx:1.3
 
 RUN apk add --no-cache git openssh-client
 COPY conf/default.conf /etc/nginx/conf.d/default.conf

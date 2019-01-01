@@ -1,1 +1,7 @@
+## v0.3
+- 没有挂载/home/wwwroot/default/data时直接退出
+
+## v0.2
+- 更新基础镜像到1.3 修复env bug
+
 ## v0.1

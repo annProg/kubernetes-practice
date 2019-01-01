@@ -39,6 +39,9 @@ for item in `ls $APP_CONFIG_PATH`; do
 done
 ```
 
+### 存储
+挂载volume到/home/wwwroot/default/data目录
+
 ### git存储
 如果没有挂载持久化的存储，推荐使用git存储，需要配置一下环境变量
 
