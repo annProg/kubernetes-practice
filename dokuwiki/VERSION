@@ -1,3 +1,6 @@
+## v0.6
+- chown nobody.nobody conf/*.php. allow config by dokuwiki management tool
+
 ## v0.5
 - fix bugs of git config user.name user.email
 

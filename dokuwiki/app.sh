@@ -38,6 +38,7 @@ function stepPreConf() {
 	for item in `ls $APP_CONFIG_PATH`; do 
 		echo $item | grep -E '[A-Z]' && continue          # 跳过普通环境变量
 		cp $APP_CONFIG_PATH/$item $WIKIROOT/conf/${item}".php"
+		chown nobody.nobody $WIKIROOT/conf/${item}".php"   # 允许通过配置工具修改配置，但是重部之后会失效
 	done
 
 	# default acl and account
