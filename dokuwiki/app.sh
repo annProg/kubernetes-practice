@@ -116,6 +116,10 @@ function stepPluginGitbacked() {
 	fi
 }
 
+function stepPluginSyntaxhighlightjs() {
+	setConf plugin syntaxhighlightjs selectClass "pre.code"
+}
+
 function stepTplBootstrap3() {
 	setConf tpl bootstrap3 showThemeSwitcher "1"
 	setConf tpl bootstrap3 showPageIcons "1"
@@ -126,4 +130,5 @@ function stepTplBootstrap3() {
 # 执行以step开头的函数
 stepPreConf
 stepPluginGitbacked
+stepPluginSyntaxhighlightjs
 stepTplBootstrap3

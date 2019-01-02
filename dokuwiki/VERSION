@@ -1,3 +1,6 @@
+## v0.8
+- add plugin syntaxhighlightjs
+
 ## v0.7
 - add php7-xml. fix rss load error
 

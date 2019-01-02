@@ -85,6 +85,11 @@ RUN wget https://github.com/dokufreaks/plugin-tag/tarball/master -O tag.tar.gz
 RUN tar zxvf tag.tar.gz
 RUN mv dokufreaks-plugin-tag-* plugins/tag
 
+# syntaxhighlightjs插件
+RUN wget https://github.com/annProg/dokuwiki-plugin-syntaxhighlightjs/archive/master.zip -O syntaxhighlightjs.zip
+RUN unzip syntaxhighlightjs.zip
+RUN mv dokuwiki-plugin-syntaxhighlightjs-master plugins/syntaxhighlightjs
+
 
 # dokuwiki镜像
 FROM registry.cn-beijing.aliyuncs.com/kubebase/php7-nginx:1.3
