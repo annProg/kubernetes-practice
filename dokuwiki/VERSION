@@ -1,3 +1,7 @@
+## v0.9
+- update to 2018-04-22b
+- deny to access to /VERSION
+
 ## v0.8
 - add plugin syntaxhighlightjs
 

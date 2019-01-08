@@ -2,11 +2,11 @@ FROM alpine:3.8 as builder
 RUN	sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 RUN apk add --no-cache wget unzip
 WORKDIR /wiki
-RUN wget https://github.com/splitbrain/dokuwiki/archive/release_stable_2018-04-22a.tar.gz -O stable.tar.gz
+RUN wget https://github.com/splitbrain/dokuwiki/archive/release_stable_2018-04-22b.tar.gz -O stable.tar.gz
 RUN tar zxvf stable.tar.gz
-RUN rm -f dokuwiki-release_stable_2018-04-22a/install.php
+RUN rm -f dokuwiki-release_stable_2018-04-22b/install.php
 # data目录需要挂载volume
-RUN mv dokuwiki-release_stable_2018-04-22a/data /tmp/
+RUN mv dokuwiki-release_stable_2018-04-22b/data /tmp/
 
 RUN mkdir plugins tpl
 
@@ -99,7 +99,7 @@ RUN apk add --no-cache php7-xml
 COPY conf/default.conf /etc/nginx/conf.d/default.conf
 COPY conf/dokuwiki_rewrite.conf /etc/nginx/dokuwiki_rewrite.conf
 
-COPY --from=builder /wiki/dokuwiki-release_stable_2018-04-22a/ /home/wwwroot/default/
+COPY --from=builder /wiki/dokuwiki-release_stable_2018-04-22b/ /home/wwwroot/default/
 COPY --from=builder /wiki/tpl/ /home/wwwroot/default/lib/tpl/
 COPY --from=builder /wiki/plugins/ /home/wwwroot/default/lib/plugins/
 
