@@ -1,3 +1,6 @@
+## v0.10
+- add php7-zip. plugin epub need php7-zip
+
 ## v0.9
 - update to 2018-04-22b
 - deny to access to /VERSION
