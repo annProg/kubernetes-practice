@@ -1,2 +1,2 @@
-# php7-dev镜像
-包含编译php7扩展的开发工具。用于多段构建
+# golang-builder
+包含golang开发工具。用于多段构建
