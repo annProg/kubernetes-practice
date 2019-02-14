@@ -8,16 +8,13 @@ APP ?= $(shell pwd |awk -F'/' '{print $$NF}')
 exists ?= $(shell docker ps -a |grep $(APP) &>/dev/null && echo "yes" || echo "no")
 PORT ?= 9200
  
-WORKDIR ?= $(shell pwd)
-PWD =$(shell pwd)
+PWD = $(shell pwd)
  
 # k8s预定义的APP_CONFIG_PATH环境变量默认值为/run/secret/appconfig
 APP_CONFIG_PATH ?= /run/secret/appconfig
  
 all: build-docker push
  
-build:
-	cd $(WORKDIR)/src && go install
 build-docker:
 	docker build -t $(IMAGE):$(TAG) .
  
