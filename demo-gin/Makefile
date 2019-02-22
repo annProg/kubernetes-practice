@@ -1,10 +1,10 @@
 IMAGENAME ?= $(shell pwd |awk -F'/' '{print $$NF}')
-REGISTRY ?= registry-cn.scloud.letv.com/hean
+REGISTRY ?= registry.cn-beijing.aliyuncs.com/kubebase
 TAG ?= latest
 IMAGE = $(REGISTRY)/$(IMAGENAME)
  
 # 以下3行用于自动更新dev环境上的部署
-CMDBAPI ?= http://cmdb.scloud.letv.cn/api/k8s.php
+CMDBAPI ?= http://cmdb.com.cn/api/k8s.php
 CLUSTER ?= dev
 APP ?= k8s
  

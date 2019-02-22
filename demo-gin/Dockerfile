@@ -1,4 +1,4 @@
-FROM registry-cn.scloud.letv.com/hean/golang-dev as builder
+FROM registry.cn-beijing.aliyuncs.com/kubebase/golang-builder as builder
 COPY src /go/src/demo-gin/src
 COPY vendor /go/src/demo-gin/vendor
 WORKDIR /go/src/demo-gin/src

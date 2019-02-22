@@ -1,8 +1,8 @@
 IMAGENAME ?= k8s-demo
-REGISTRY ?= registry-cn.scloud.letv.com/hean
+REGISTRY ?= registry.cn-beijing.aliyuncs.com/kubebase
 TAG ?= latest
 IMAGE = $(REGISTRY)/$(IMAGENAME)
-CMDBAPI ?= http://cmdb.scloud.letv.cn/api/k8s.php
+CMDBAPI ?= http://cmdb.com.cn/api/k8s.php
 CLUSTER ?= dev
 APP ?= k8s
 
