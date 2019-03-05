@@ -11,6 +11,4 @@ RUN mkdir /filebeat
 RUN yum install -y net-tools && rm -fr /var/cache/yum/*
 COPY --from=builder /root/filebeat-6.6.0-linux-x86_64/ /filebeat
 
-COPY app.sh /
-
-CMD ["/bin/bash", "/app.sh"]
+ENTRYPOINT ["/filebeat/filebeat"]
