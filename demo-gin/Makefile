@@ -26,10 +26,10 @@ all: build-docker push up config
 build:
 	cd $(WORKDIR)/src && go install
 build-docker:
-	./tag.sh $(TAG)
 	docker build -t $(IMAGE):$(REALTAG) .
  
 push:
+	./tag.sh $(TAG)
 	docker tag $(IMAGE):$(REALTAG) $(IMAGE):latest
 	docker push $(IMAGE):$(REALTAG)
 	docker push $(IMAGE):latest
@@ -47,7 +47,7 @@ run:
 ifeq ($(exists), yes)
 	docker stop $(APP);docker rm $(APP)
 endif
-	docker run --name $(APP) -d -p $(PORT):80 --env-file $(PWD)/debug/conf/ENV --env APP_CONFIG_PATH=$(APP_CONFIG_PATH) $(IMAGE):$(TAG)
+	docker run --name $(APP) -d -p $(PORT):80 --env-file $(PWD)/debug/conf/ENV --env APP_CONFIG_PATH=$(APP_CONFIG_PATH) $(IMAGE):$(REALTAG)
  
 # 上线到dev集群
 up:
