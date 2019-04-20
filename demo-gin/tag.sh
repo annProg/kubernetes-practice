@@ -33,7 +33,7 @@ function ismerge() {
 function checkTag() {
 	if [ "$TAG"x != "latest"x ];then
 		#remotetagrev=`git ls-remote --exit-code --tags origin refs/tags/$TAG^{} |awk '{print $1}'`
-		remotetagrev=`grep "$TAG\^\{\}" $TMPFILE |awk '{print $1}'`
+		remotetagrev=`grep -E "$TAG\^\{\}" $TMPFILE |awk '{print $1}'`
 		tagrev=`git rev-parse $TAG^{}`
 		if [ "$tagrev"x != "$REVISION"x ];then
 			echo "tag revision($tagrev) not equal to current revision($REVISION). Can not use this tag($TAG)"
