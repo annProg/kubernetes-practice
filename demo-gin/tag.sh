@@ -19,7 +19,7 @@ function isclean() {
 
 function ispush() {
 	git ls-remote > $TMPFILE
-	grep "$REVISION" $TMPFILE && r=0 || r=1
+	grep "$REVISION" $TMPFILE &>/dev/null && r=0 || r=1
 	[ $r -eq 1 ] && echo "commit not pushed. please run git push first" && exit 1
 }
 
