@@ -3,7 +3,7 @@ REGISTRY ?= registry.cn-beijing.aliyuncs.com/kubebase
 TAG ?= $(shell git rev-parse --short HEAD)
 IMAGE = $(REGISTRY)/$(IMAGENAME)
 
-ISCLEAN = $(git status -s |wc -l)
+ISCLEAN = $(shell git status -s |wc -l)
 
 # 以下3行用于自动更新dev环境上的部署
 CMDBAPI ?= http://cmdb.com.cn/api/k8s.php
@@ -26,7 +26,7 @@ build:
 	cd $(WORKDIR)/src && go install
 build-docker:
 ifneq ("$(ISCLEAN)","0")
-	echo "working directory not clean. please commit first"
+	echo "working directory not clean($(ISCLEAN)). please commit first"
 else
 	docker build -t $(IMAGE):$(TAG) .
 endif
