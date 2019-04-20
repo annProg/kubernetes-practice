@@ -7,7 +7,7 @@ RUN tar zxvf filebeat-6.6.0-linux-x86_64.tar.gz
 
 
 FROM centos:7
-RUN mkdir /filebeat
+RUN mkdir -p /filebeat/{data,inputs.d}
 RUN yum install -y net-tools && rm -fr /var/cache/yum/*
 COPY --from=builder /root/filebeat-6.6.0-linux-x86_64/ /filebeat
 
