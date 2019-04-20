@@ -10,6 +10,7 @@
 TAG=$1
 REVISION=`git rev-parse HEAD`
 SHORT_REVISION=`git rev-parse --short HEAD`
+TMPFILE="/tmp/k8s_check_tag_$TAG-$REVISION-$RANDOM$RANDOM$RANDOM.txt"
 
 function isclean() {
 	isclean=`git status -s |wc -l`
@@ -17,7 +18,8 @@ function isclean() {
 }
 
 function ispush() {
-	git ls-remote |grep "$REVISION" && r=0 || r=1
+	git ls-remote > $TMPFILE
+	grep "$REVISION" $TMPFILE && r=0 || r=1
 	[ $r -eq 1 ] && echo "commit not pushed. please run git push first" && exit 1
 }
 
@@ -30,7 +32,8 @@ function ismerge() {
 
 function checkTag() {
 	if [ "$TAG"x != "latest"x ];then
-		remotetagrev=`git ls-remote --exit-code origin refs/tags/$TAG^{} |awk '{print $1}'`
+		#remotetagrev=`git ls-remote --exit-code --tags origin refs/tags/$TAG^{} |awk '{print $1}'`
+		remotetagrev=`grep "$TAG\^\{\}" $TMPFILE |awk '{print $1}'`
 		tagrev=`git rev-parse $TAG^{}`
 		if [ "$tagrev"x != "$REVISION"x ];then
 			echo "tag revision($tagrev) not equal to current revision($REVISION). Can not use this tag($TAG)"
