@@ -1,9 +1,10 @@
 IMAGENAME ?= $(shell pwd |awk -F'/' '{print $$NF}')
 REGISTRY ?= registry.cn-beijing.aliyuncs.com/kubebase
-TAG ?= $(shell git rev-parse --short HEAD)
 IMAGE = $(REGISTRY)/$(IMAGENAME)
 
-ISCLEAN = $(shell git status -s |wc -l)
+TAG ?= latest
+REVISION = $(shell git rev-parse --short HEAD)
+REALTAG = $(TAG)-$(REVISION)
 
 # 以下3行用于自动更新dev环境上的部署
 CMDBAPI ?= http://cmdb.com.cn/api/k8s.php
@@ -25,15 +26,12 @@ all: build-docker push up config
 build:
 	cd $(WORKDIR)/src && go install
 build-docker:
-ifneq ("$(ISCLEAN)","0")
-	echo "working directory not clean($(ISCLEAN)). please commit first"
-else
-	docker build -t $(IMAGE):$(TAG) .
-endif
+	./tag.sh
+	docker build -t $(IMAGE):$(REALTAG) .
  
 push:
-	docker tag $(IMAGE):$(TAG) $(IMAGE):latest
-	docker push $(IMAGE):$(TAG)
+	docker tag $(IMAGE):$(REALTAG) $(IMAGE):latest
+	docker push $(IMAGE):$(REALTAG)
 	docker push $(IMAGE):latest
  
 # 通过定义 // CONFIG-BY-ENV 格式的注释，抓取所有需要用环境变量设置的配置项
