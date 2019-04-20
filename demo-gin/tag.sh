@@ -47,6 +47,7 @@ function checkTag() {
 	fi
 }
 
+[ "$TAG"x == ""x ] && echo "param TAG required!" && exit 1
 # 首先判断代码是否提交，然后判断代码是否push
 # 指定tag时，要对比本地tag和远程tag是否一致
 
