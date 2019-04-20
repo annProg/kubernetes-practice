@@ -26,7 +26,7 @@ all: build-docker push up config
 build:
 	cd $(WORKDIR)/src && go install
 build-docker:
-	./tag.sh
+	./tag.sh $(TAG)
 	docker build -t $(IMAGE):$(REALTAG) .
  
 push:
