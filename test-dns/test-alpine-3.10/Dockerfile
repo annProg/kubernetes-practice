@@ -1,4 +1,4 @@
-FROM alpine:3.8
+FROM alpine:3.10
 
 ENV TIMEZONE Asia/Shanghai
 
@@ -10,7 +10,14 @@ RUN	apk add --no-cache tzdata && \
 
 RUN apk add --no-cache dumb-init ca-certificates
 
+RUN apk add --no-cache nginx tcpdump iproute2 bind-tools curl
+RUN mkdir /run/nginx && chown -R nginx.nginx /run/nginx
+COPY conf/default.conf /etc/nginx/conf.d
+RUN mkdir -p /home/wwwroot/default
+
 COPY init.sh /
+COPY test.sh /
+RUN chmod +x /test.sh
 
 RUN chmod +x /init.sh
 ENTRYPOINT ["/usr/bin/dumb-init", "-v", "--"] 
